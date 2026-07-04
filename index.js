@@ -40,12 +40,20 @@ async function run() {
 
     //database related apis here:-----
 
-    //find a user from the db(read operation)
+    //find all user from the db(read operation)
     app.get("/users", async (req, res) => {
       const cursor = usersCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
+
+    // find a single user from the db(read operation)
+    app.get("/users/:id",async(req,res)=>{
+      const id = req.params.id
+      const query = {_id:new ObjectId(id)}
+      const result = await usersCollection.findOne(query)
+      res.send(result)
+    })
 
     //delete a user from the db(delete operation)
     app.delete("/users/:id", async(req, res) => {
