@@ -48,20 +48,35 @@ async function run() {
     });
 
     // find a single user from the db(read operation)
-    app.get("/users/:id",async(req,res)=>{
-      const id = req.params.id
-      const query = {_id:new ObjectId(id)}
-      const result = await usersCollection.findOne(query)
+    app.get("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await usersCollection.findOne(query);
+      res.send(result);
+    });
+
+    // update a user from the db (update operation)
+    app.patch("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedUser = req.body;
+      const query = { _id: new ObjectId(id) };
+      const update = {
+        $set: {
+          name: updatedUser.name,
+          email: updatedUser.email,
+        },
+      };
+      const result = await usersCollection.updateOne(query, update);
       res.send(result)
-    })
+    });
 
     //delete a user from the db(delete operation)
-    app.delete("/users/:id", async(req, res) => {
+    app.delete("/users/:id", async (req, res) => {
       const id = req.params.id;
       console.log(id);
-      const query = {_id:new ObjectId(id)}
-      const result = await usersCollection.deleteOne(query)
-      res.send(result)
+      const query = { _id: new ObjectId(id) };
+      const result = await usersCollection.deleteOne(query);
+      res.send(result);
     });
 
     //send a user from the client side to db(create operation)
